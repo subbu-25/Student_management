@@ -1,5 +1,5 @@
 from app.services.student_service import StudentService
-from app.models.student import Student
+from app.models.student import Student,UpdateStudent
 
 class StudentController:
     @staticmethod
@@ -24,10 +24,33 @@ class StudentController:
         }
 
     @staticmethod
-    def update_student(student_id: str, student_data: dict):
-        update_data = {k: v for k, v in student_data.dict().items() if v is not None}
-        StudentService.update_student(student_id, update_data)
-        return {}
+    def update_student(student_id: str, student_data: UpdateStudent):
+        # Extract the fields provided in the update request
+        update_data = student_data.dict(exclude_unset=True)
+        existing_student = StudentService.fetch_student(student_id)
+
+        if not existing_student:
+            raise HTTPException(status_code=404, detail="Student not found")
+
+        # Merge the provided data with the existing student data
+        merged_data = {
+            "name": update_data.get("name", existing_student["name"]),
+            "age": update_data.get("age", existing_student["age"]),
+            "address": {
+                "city": existing_student["address"].get("city"),
+                "country": existing_student["address"].get("country")
+            }
+        }
+
+        # If address is provided in the update_data, override existing fields
+        if "address" in update_data and update_data["address"] is not None:
+            if "city" in update_data["address"] and update_data["address"]["city"] is not None:
+                merged_data["address"]["city"] = update_data["address"]["city"]
+            if "country" in update_data["address"] and update_data["address"]["country"] is not None:
+                merged_data["address"]["country"] = update_data["address"]["country"]
+
+        StudentService.update_student(student_id, merged_data)
+        return {"message": "Student updated successfully"}
 
     @staticmethod
     def delete_student(student_id: str):
