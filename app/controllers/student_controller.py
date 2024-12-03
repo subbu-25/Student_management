@@ -1,5 +1,7 @@
 from app.services.student_service import StudentService
 from app.models.student import Student,UpdateStudent
+from fastapi import Response, APIRouter, HTTPException
+
 
 class StudentController:
     @staticmethod
@@ -50,7 +52,7 @@ class StudentController:
                 merged_data["address"]["country"] = update_data["address"]["country"]
 
         StudentService.update_student(student_id, merged_data)
-        return {"message": "Student updated successfully"}
+        return Response(status_code=204)
 
     @staticmethod
     def delete_student(student_id: str):

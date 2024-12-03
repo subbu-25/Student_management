@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional,List
 from pydantic import BaseModel
 
 class Address(BaseModel):
@@ -13,8 +13,11 @@ class Student(BaseModel):
 class StudentResponse(BaseModel):
     name: str
     age: int
-    address: Address
+class StudentsListResponse(BaseModel):
+    data: List[StudentResponse]
 
+class CreateStudentResponse(BaseModel):
+    id: str
 # Schema for partial updates
 class UpdateStudent(BaseModel):
     name: Optional[str] = None
