@@ -20,7 +20,9 @@ async def fetch_student(id: str):
 
 @router.patch("/students/{id}", status_code=204)
 async def update_student(id: str, student: UpdateStudent):
-    return StudentController.update_student(id, student)
+    
+     StudentController.update_student(id, student)
+     return {}
 
 @router.delete("/students/{id}",response_model=dict, status_code=200)
 async def delete_student(id: str):

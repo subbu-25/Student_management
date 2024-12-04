@@ -1,10 +1,13 @@
 from typing import Optional,List
 from pydantic import BaseModel
 
-class Address(BaseModel):
+class OptionalAddress(BaseModel):
     city: Optional[str] = None
     country: Optional[str] = None
 
+class Address(BaseModel):
+    city:str
+    country:str
 class Student(BaseModel):
     name: str
     age: int
@@ -22,4 +25,4 @@ class CreateStudentResponse(BaseModel):
 class UpdateStudent(BaseModel):
     name: Optional[str] = None
     age: Optional[int] = None
-    address: Optional[Address] = None
+    address: Optional[OptionalAddress] = None
